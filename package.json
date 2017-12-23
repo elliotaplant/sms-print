@@ -21,7 +21,8 @@
     "url": "https://github.com/elliotaplant/sms-print/issues"
   },
   "homepage": "https://github.com/elliotaplant/sms-print#readme",
-  "devDependencies": {
-    "hapi": "^17.2.0"
+  "devDependencies": {},
+  "dependencies": {
+    "twilio": "^3.11.0"
   }
 }

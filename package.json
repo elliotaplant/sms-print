@@ -1,0 +1,27 @@
+{
+  "name": "sms-print",
+  "version": "1.0.0",
+  "description": "Print picture messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elliotaplant/sms-print.git"
+  },
+  "keywords": [
+    "picture",
+    "print",
+    "twilio"
+  ],
+  "author": "elliotaplant@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elliotaplant/sms-print/issues"
+  },
+  "homepage": "https://github.com/elliotaplant/sms-print#readme",
+  "devDependencies": {
+    "hapi": "^17.2.0"
+  }
+}

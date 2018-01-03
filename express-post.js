@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 // Route that receives a POST request to /
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
-  if (req.body.body.toLowerCase().includes('send')) {
+  if (req.body.Body.toLowerCase().includes('send')) {
     if (!currentOrder) {
       res.send(`It looks like we don't have any photos on file for you yet. Want to send some?`);
     } else {

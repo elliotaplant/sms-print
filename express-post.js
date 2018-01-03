@@ -2,6 +2,13 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+console.log(
+  'env variables',
+  process.env.PWINTY_ENV,
+  process.env.PWINTY_MERCHANT_ID,
+  process.env.PWINTY_API_KEY
+);
+
 const environment = process.env.PWINTY_ENV;
 
 const pwinty = require('pwinty')(
@@ -27,9 +34,11 @@ app.post('/', function(req, res) {
         res.send(`Got it! We'll print that picture out and mail it to ${mailingAddress().address1}`);
       })
       .catch(error => {
-        res.send(`I'm sorry, but something went wrong. Could you tell me more about the issue at  elliotaplant@mgail.com?`);
+        res.send(
+          `I'm sorry, but something went wrong. Could you tell me more about the issue at  elliotaplant@mgail.com?`
+        );
       })
-  } else {
+    } else {
     res.send(`Hmm we couldn't find the picture in that message. Sorry!`);
   }
 });
@@ -54,12 +63,7 @@ function createPwintyOrder(photoUrl) {
   return new Promise((resolve, reject) => {
     pwinty.createOrder(mailingAddress(), function(err, order) {
 
-      var photo = Object.assign({
-        type: "4x6",
-        url: photoUrl,
-        copies: "1",
-        sizing: "Crop",
-      });
+      var photo = Object.assign({type: "4x6", url: photoUrl, copies: "1", sizing: "Crop"});
 
       pwinty.addPhotoToOrder(order.id, photo, function(err) {
         if (err) {
@@ -86,7 +90,10 @@ function getPwintyOrderStatus(orderId) {
 
 function updatePwintyOrderStatus(orderId) {
   return new Promise((resolve, reject) => {
-    pwinty.updateOrderStatus({id: orderId, status: 'Submitted'}, (err, status) => {
+    pwinty.updateOrderStatus({
+      id: orderId,
+      status: 'Submitted',
+    }, (err, status) => {
       if (err) {
         reject(err);
       } else {
@@ -104,14 +111,12 @@ function mailingAddress() {
     address1: '3705 Florida Ct. Unit E',
     addressTownOrCity: 'North Chicago',
     stateOrCounty: 'IL',
-    postalOrZipCode: '60088',
+    postalOrZipCode: '60088'
   }
 }
 
-// Test Pwinty:
-// const testPhotoUrl = 'https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM8e8ed7665f4ff9290a4168320f14540d/Media/MEc8db493cdc4c86429424d456c6ed01b6';
+// Test Pwinty: const testPhotoUrl =
+// 'https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM8e8ed7665f4ff9290a4168320f14540d/Media/MEc8db493cdc4c86429424d456c6ed01b6';
 //
-// createPwintyOrder(testPhotoUrl)
-//   .then(getPwintyOrderStatus)
-//   .then(updatePwintyOrderStatus)
-//   .then(orderId => console.log('end', JSON.stringify(orderId)));
+// createPwintyOrder(testPhotoUrl)   .then(getPwintyOrderStatus)   .then(updatePwintyOrderStatus)
+// .then(orderId => console.log('end', JSON.stringify(orderId)));

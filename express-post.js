@@ -34,6 +34,11 @@ app.post('/', function(req, res) {
   }
 });
 
+app.get('/', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send(`Found you at ${new Date().toString()}`)
+});
+
 // Tell our app to listen on port 3000
 app.listen(3000, function(err) {
   if (err) {

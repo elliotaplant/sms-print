@@ -2,12 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-console.log(
-  'env variables',
-  process.env.PWINTY_ENV,
-  process.env.PWINTY_MERCHANT_ID,
-  process.env.PWINTY_API_KEY
-);
+const port = process.env.PORT || 8080;
 
 const environment = process.env.PWINTY_ENV;
 
@@ -50,8 +45,8 @@ app.get('/', (req, res) => {
 
 app.static
 
-// Tell our app to listen on port 3000
-app.listen(3000, function(err) {
+// Tell our app to listen on port determined by environment
+app.listen(port, function(err) {
   if (err) {
     throw err
   }

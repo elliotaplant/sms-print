@@ -44,7 +44,9 @@ app.post('/', function(req, res) {
     createPwintyOrderIfNecessary()
       .then(() => addPhotoToPwintyOrder(req.body.MediaUrl0))
       .then(() => {
-        res.send(`Got it! We added the photo to your order. Just say 'Send' and we'll send all the photos in the order to you.`);
+        res.send(
+          `Got it! We added the photo to your order. Just say 'Send' and we'll send all the photos in the order to you.`
+        );
       })
       .catch(error => {
         res.send(
@@ -58,12 +60,14 @@ app.post('/', function(req, res) {
 
 app.get('/', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.send(`<head></head>
+  res.send(
+    `<head></head>
     <body>
       <h1>Hi Elliot! Found you at ${new Date().toString()}</h1>
       <h3>Current Order:</h3>
       <pre>${JSON.stringify(currentOrder, null, 2)}</pre>
-    </body>`)
+    </body>`
+  )
 });
 
 app.use(express.static('/'));
@@ -98,14 +102,16 @@ function addPhotoToPwintyOrder(photoUrl) {
   if (!currentOrder) {
     throw new Error('No order exists to add photo');
   }
-  const photo = Object.assign({type: "4x6", url: photoUrl, copies: "1", sizing: "Crop",});
+  const photo = Object.assign({type: "4x6", url: photoUrl, copies: "1", sizing: "Crop"});
 
-  pwinty.addPhotoToOrder(currentOrder.id, photo, function(err) {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(currentOrder.id)
-    }
+  return new Promise((resolve, reject) => {
+    pwinty.addPhotoToOrder(currentOrder.id, photo, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(photo)
+      }
+    });
   });
 }
 
@@ -125,7 +131,7 @@ function updatePwintyOrderStatus(orderId) {
   return new Promise((resolve, reject) => {
     pwinty.updateOrderStatus({
       id: orderId,
-      status: 'Submitted'
+      status: 'Submitted',
     }, (err, status) => {
       if (err) {
         reject(err);
@@ -144,14 +150,18 @@ function mailingAddress() {
     address1: '3705 Florida Ct. Unit E',
     addressTownOrCity: 'North Chicago',
     stateOrCounty: 'IL',
-    postalOrZipCode: '60088',
+    postalOrZipCode: '60088'
   }
 }
 
 function reqIncludesSend(req) {
   try {
-    return req.body.Body.toLowerCase().includes('send');
-  } catch(e) {
+    return req
+      .body
+      .Body
+      .toLowerCase()
+      .includes('send');
+  } catch (e) {
     return false;
   }
 }

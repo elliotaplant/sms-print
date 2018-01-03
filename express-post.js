@@ -2,13 +2,13 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const pwinty = require('pwinty')(
-  process.env.PWINTY_API_KEY,
-  process.env.PWINTY_MERCHANT_ID,
-  'https://sandbox.pwinty.com:443'
-);
+const environment = process.env.PWINTY_ENV;
 
-const mailingAddress = '7304 W Florida Ave\nGreat Lakes, IL 60088';
+const pwinty = require('pwinty')(
+  process.env.PWINTY_MERCHANT_ID,
+  process.env.PWINTY_API_KEY,
+  `https://${environment || 'sandbox'}.pwinty.com/v2.5/`
+);
 
 // Create a new instance of express
 const app = express()
@@ -21,12 +21,13 @@ app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
   if (req.body.MediaUrl0) {
     createPwintyOrder(req.body.MediaUrl0)
+      .then(getPwintyOrderStatus)
+      .then(updatePwintyOrderStatus)
       .then(() => {
-        res.send(`Got it! We'll print that picture out and mail it to ${mailingAddress}`);
+        res.send(`Got it! We'll print that picture out and mail it to ${mailingAddress().address1}`);
       })
       .catch(error => {
-        res.send(`I'm sorry, but something went wrong.
-        Let me know what went wrong at elliotaplant@mgail.com`);
+        res.send(`I'm sorry, but something went wrong. Could you tell me more about the issue at  elliotaplant@mgail.com?`);
       })
   } else {
     res.send(`Hmm we couldn't find the picture in that message. Sorry!`);
@@ -44,16 +45,16 @@ app.listen(3000, function(err) {
 
 function createPwintyOrder(photoUrl) {
   return new Promise((resolve, reject) => {
-    pwinty.createOrder({}, function(err, order) {
+    pwinty.createOrder(mailingAddress(), function(err, order) {
 
-      var photo = {
+      var photo = Object.assign({
         type: "4x6",
-        url: photourl,
+        url: photoUrl,
         copies: "1",
         sizing: "Crop",
-      };
+      });
 
-      pwinty.addPhotoToOrder(order.id, photo, function(err, order) {
+      pwinty.addPhotoToOrder(order.id, photo, function(err) {
         if (err) {
           reject(err);
         } else {
@@ -63,3 +64,47 @@ function createPwintyOrder(photoUrl) {
     })
   })
 }
+
+function getPwintyOrderStatus(orderId) {
+  return new Promise((resolve, reject) => {
+    pwinty.getOrderStatus(orderId, (err, status) => {
+      if (err || !status.isValid) {
+        reject(err);
+      } else {
+        resolve(orderId);
+      }
+    })
+  });
+}
+
+function updatePwintyOrderStatus(orderId) {
+  return new Promise((resolve, reject) => {
+    pwinty.updateOrderStatus({id: orderId, status: 'Submitted'}, (err, status) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(status);
+      }
+    })
+  });
+}
+
+function mailingAddress() {
+  return {
+    countryCode: 'US',
+    qualityLevel: 'Standard',
+    recipientName: 'Amber Fearon',
+    address1: '3705 Florida Ct. Unit E',
+    addressTownOrCity: 'North Chicago',
+    stateOrCounty: 'IL',
+    postalOrZipCode: '60088',
+  }
+}
+
+// Test Pwinty:
+// const testPhotoUrl = 'https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM8e8ed7665f4ff9290a4168320f14540d/Media/MEc8db493cdc4c86429424d456c6ed01b6';
+//
+// createPwintyOrder(testPhotoUrl)
+//   .then(getPwintyOrderStatus)
+//   .then(updatePwintyOrderStatus)
+//   .then(orderId => console.log('end', JSON.stringify(orderId)));

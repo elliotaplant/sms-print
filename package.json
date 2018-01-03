@@ -21,7 +21,8 @@
     "url": "https://github.com/elliotaplant/sms-print/issues"
   },
   "homepage": "https://github.com/elliotaplant/sms-print#readme",
-  "devDependencies": {},
+  "devDependencies": {
+  },
   "dependencies": {
     "express": "^4.16.2",
     "pwinty": "^2.3.1",

@@ -13,7 +13,7 @@ const pwinty = require('pwinty')(
 );
 
 // Stores current order state
-const currentOrder = null;
+let currentOrder = null;
 
 // Create a new instance of express
 const app = express()
@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 // Route that receives a POST request to /
 app.post('/', function(req, res) {
   res.set('Content-Type', 'text/plain');
-  if (req.body.Body.toLowerCase().includes('send')) {
+  if (reqIncludesSend(req)) {
     if (!currentOrder) {
       res.send(`It looks like we don't have any photos on file for you yet. Want to send some?`);
     } else {
@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
     </body>`)
 });
 
-app.static
+app.use(express.static('/'));
 
 // Tell our app to listen on port determined by environment
 app.listen(port, function(err) {
@@ -145,5 +145,13 @@ function mailingAddress() {
     addressTownOrCity: 'North Chicago',
     stateOrCounty: 'IL',
     postalOrZipCode: '60088',
+  }
+}
+
+function reqIncludesSend(req) {
+  try {
+    return req.body.Body.toLowerCase().includes('send');
+  } catch(e) {
+    return false;
   }
 }

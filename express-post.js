@@ -136,6 +136,7 @@ function updatePwintyOrderStatus(orderId) {
       if (err) {
         reject(err);
       } else {
+        currentOrder = null;
         resolve(status);
       }
     })

@@ -114,9 +114,3 @@ function mailingAddress() {
     postalOrZipCode: '60088'
   }
 }
-
-// Test Pwinty: const testPhotoUrl =
-// 'https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM8e8ed7665f4ff9290a4168320f14540d/Media/MEc8db493cdc4c86429424d456c6ed01b6';
-//
-// createPwintyOrder(testPhotoUrl)   .then(getPwintyOrderStatus)   .then(updatePwintyOrderStatus)
-// .then(orderId => console.log('end', JSON.stringify(orderId)));

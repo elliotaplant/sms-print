@@ -2,7 +2,7 @@
   "name": "sms-print",
   "version": "1.0.0",
   "description": "Print picture messages",
-  "main": "index.js",
+  "main": "express-post.js",
   "scripts": {
     "test": "test",
     "start": "node express-post.js"
@@ -28,5 +28,8 @@
     "express": "^4.16.2",
     "pwinty": "^2.3.1",
     "twilio": "^3.11.0"
+  },
+  "engines": {
+    "node": "7.2.0"
   }
 }

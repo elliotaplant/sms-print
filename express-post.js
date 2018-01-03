@@ -3,21 +3,21 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
+const mailingAddress = '7304 W Florida Ave\nGreat Lakes, IL 60088';
+
 // Create a new instance of express
 const app = express()
 
 // Tell express to use the body-parser middleware and to not parse extended bodies
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// Route that receives a POST request to /sms
-app.post('/sms', function (req, res) {
-  const body = req.body.Body
+// Route that receives a POST request to /
+app.post('/', function (req, res) {
   res.set('Content-Type', 'text/plain');
-  console.log('body', body);
-  if (body.includes('Annie')) {
-    res.send(`Oh hey wassup annie`)
+  if (req.body.MediaUrl0) {
+    res.send(`Got it! We'll print that picture out and mail it to ${mailingAddress}`);
   } else {
-    res.send(`You sent: ${body} to Express`)
+    res.send(`Hmm we couldn't find the picture in that message. Sorry!`);
   }
 })
 

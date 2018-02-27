@@ -146,7 +146,7 @@ function updatePwintyOrderStatus(orderId) {
 function mailingAddress() {
   return {
     countryCode: 'US',
-    qualityLevel: 'Standard',
+    qualityLevel: 'Pro',
     recipientName: 'Amber Fearon',
     address1: '3705 Florida Ct. Unit E',
     addressTownOrCity: 'North Chicago',
